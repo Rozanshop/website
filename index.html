@@ -754,10 +754,11 @@ function renderProduct(id) {
                         <img src="${img}" alt="${p.name}" style="width:100%;height:350px;object-fit:cover;" onclick="openMagnifierModal(${id}, ${i})">
                     </div>`).join('')}
             </div>
-            ${videoSrc ? `
-              style="width: 100%; aspect-ratio: 7 / 9; object-fit: cover; border-radius: 10px; display: block; margin: 0 auto;">
-              <source src="${videoSrc}" type="video/mp4">
-            </video>` : ''}
+                       ${videoSrc ? `
+    <video controls autoplay loop muted 
+        style="width: 70%; aspect-ratio: 7/9; object-fit: cover; border-radius: 10px; display: block; margin: 0 auto;">
+    <source src="${videoSrc}" type="video/mp4">
+    </video>` : ''}
             <div class="product-info" style="max-width:600px;text-align:center;">
                 <h2 style="font-family:'Playfair Display', serif;margin-bottom:15px;">${p.name}</h2>
                 <p style="line-height:1.6;margin-bottom:20px;">${p.desc}</p>
