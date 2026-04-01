@@ -696,7 +696,7 @@ onError: function(err) {
 // SHOP & CATEGORIES
 // ==============================
 function renderCategories() {
-    const categories = ["Basketball", "Necklace", "Bracelet", 'Soccer'];
+    const categories = ["Basketball", "Necklace", "Bracelet", 'World Cup Soccor Necklace'];
     let html = `<div class="section"><h2>Shop</h2><div class="products">`;
 
     categories.forEach(cat => {
@@ -704,7 +704,7 @@ function renderCategories() {
         if (cat === "Basketball") catImage = "images/basketball-main.jpg";
         if (cat === "Necklace") catImage = "images/Photoroom_20260116_184522.jpg";
         if (cat === "Bracelet") catImage = "images/bracelet-main.jpg";
-         if (cat === "Soccer") catImage = "images/soccerball-main.jpg";
+         if (cat === "World Cup Soccor Necklace") catImage = "images/soccerball-main.jpg";
         
 
         html += `<div class="product-card" onclick="renderCategory('${cat}')">
