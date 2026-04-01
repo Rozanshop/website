@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 
 <!-- PAYPAL SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AVJTTNleMMELFLyiGkhPMh4pHe6CgwEubbFoLjaaZOSzeQTQ8Ozozqspe1riPa8DAB36P8zFXtH_9t-U&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=32ZRKLNDM9NMY_9t-U&currency=USD"></script>
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -102,7 +102,7 @@ const products = [
 
 {
 name: "Blue Sterling Silver Basketball Necklace",
-price: 520,
+price: 2,
 images: [
 "images/bluebasketball.jpg",
 "images/bluebasketballwomen.jpg"
@@ -396,7 +396,7 @@ function getSrc(path) {
 // CART & SHIPPING
 // ==============================
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let userTaxRate = 0.0875; // 8.75% tax
+let userTaxRate = 0.0875; // 0% tax
 function calculateTax(subtotal, state) {
     const nycTaxRate = 0.08875;
     const nyStateTaxRate = 0.04; // outside NYC
@@ -409,7 +409,7 @@ function calculateTax(subtotal, state) {
         return subtotal * otherStateTaxRate;
     }
 }
-let userShippingRate = 10;
+let userShippingRate = 0;
 let shippingType = "standard";
 
 function calculateTotals() {
