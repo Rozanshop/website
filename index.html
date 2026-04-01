@@ -755,8 +755,8 @@ function renderProduct(id) {
                     </div>`).join('')}
             </div>
             ${videoSrc ? `
-            <video controls autoplay loop muted style="width:100%;max-width:600px;height:350px;object-fit:cover;border-radius:10px;">
-                <source src="${videoSrc}" type="video/mp4">
+              style="width: 100%; aspect-ratio: 7 / 9; object-fit: cover; border-radius: 10px; display: block; margin: 0 auto;">
+              <source src="${videoSrc}" type="video/mp4">
             </video>` : ''}
             <div class="product-info" style="max-width:600px;text-align:center;">
                 <h2 style="font-family:'Playfair Display', serif;margin-bottom:15px;">${p.name}</h2>
