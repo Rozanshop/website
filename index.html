@@ -490,8 +490,8 @@ function renderCheckoutForm() {
     `).join('');
 
     const subtotal = cart.reduce((a, b) => a + b.price, 0);
-    const shipping = 0; // flat shipping
-    const tax = subtotal * 0.0000; // NYC tax 8.875%
+    const shipping = 10; // flat shipping
+    const tax = subtotal * 0.0875; // NYC tax 8.875%
     const total = subtotal + shipping + tax;
 
     // Load pre-filled info if exists
