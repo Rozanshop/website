@@ -102,7 +102,7 @@ const products = [
 
 {
 name: "Blue Sterling Silver Basketball Necklace",
-price: 520,
+price: 0.01,
 images: [
 "images/bluebasketball.jpg",
 "images/bluebasketballwomen.jpg"
@@ -486,7 +486,7 @@ function renderCheckoutForm() {
     `).join('');
 
     const subtotal = cart.reduce((a, b) => a + b.price, 0);
-    const shipping = 10; 
+    const shipping = 0; 
     const tax = subtotal * 0.0875; 
     const total = subtotal + shipping + tax;
 
