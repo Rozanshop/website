@@ -462,7 +462,7 @@ function updateCartCount() {
 
 
 // ==============================
-// CART & MANDATORY FORM + PAYPAL
+// CART & MANDATORY FORM
 // ==============================
 function renderCart() {
     if (cart.length === 0) {
@@ -474,47 +474,43 @@ function renderCart() {
         `;
         return;
     }
-
     renderCheckoutForm();
 }
 
-// ==============================
-// RENDER CHECKOUT FORM (with pre-filled info)
-// ==============================
 function renderCheckoutForm() {
     let cartItems = cart.map((item, index) => `
-        <li>
+        <li style="list-style:none; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:10px;">
             ${item.name} - $${item.price.toFixed(2)}
-            <button onclick="removeFromCart(${index})" style="margin-left:10px;color:white;background:red;border:none;padding:3px 8px;border-radius:4px;cursor:pointer;">Remove</button>
+            <button onclick="removeFromCart(${index})" style="margin-left:10px; background:red; padding:5px 10px; font-size:12px;">Remove</button>
         </li>
     `).join('');
 
     const subtotal = cart.reduce((a, b) => a + b.price, 0);
-    const shipping = 10; // flat shipping
-    const tax = subtotal * 0.0875; // NYC tax 8.875%
+    const shipping = 10; 
+    const tax = subtotal * 0.0875; 
     const total = subtotal + shipping + tax;
 
-    // Load pre-filled info if exists
     const info = window.checkoutInfo || {};
 
     document.getElementById("app").innerHTML = `
         <div class="section">
             <h2>Your Cart</h2>
-            <ul>${cartItems}</ul>
-            <p>Subtotal: $${subtotal.toFixed(2)}</p>
-            <p>Shipping: $${shipping.toFixed(2)}</p>
-            <p>Tax: $${tax.toFixed(2)}</p>
-            <p><strong>Total: $${total.toFixed(2)}</strong></p>
+            <ul style="max-width:500px; margin: 0 auto 20px auto; text-align:left;">${cartItems}</ul>
+            <div style="background:#fff; padding:20px; border-radius:10px; max-width:500px; margin:0 auto 30px auto; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+                <p>Subtotal: $${subtotal.toFixed(2)}</p>
+                <p>Shipping: $${shipping.toFixed(2)}</p>
+                <p>Tax: $${tax.toFixed(2)}</p>
+                <p style="font-size:20px; color: #b89b5e;"><strong>Total: $${total.toFixed(2)}</strong></p>
+            </div>
 
-            <h3>Enter Shipping Info (mandatory)</h3>
-            <form id="checkoutForm">
+            <h3>Shipping Details</h3>
+            <form id="checkoutForm" style="margin-bottom:30px;">
                 <input type="text" name="name" placeholder="Full Name" required value="${info.name || ''}">
                 <input type="email" name="email" placeholder="Email" required value="${info.email || ''}">
                 <input type="text" name="address" placeholder="Street Address" required value="${info.address || ''}">
                 <input type="text" name="city" placeholder="City" required value="${info.city || ''}">
                 <select name="state" required>
                     <option value="">Select State</option>
-                    <!-- List all 50 states -->
                     <option value="AL" ${info.state === 'AL' ? 'selected' : ''}>Alabama</option>
                     <option value="AK" ${info.state === 'AK' ? 'selected' : ''}>Alaska</option>
                     <option value="AZ" ${info.state === 'AZ' ? 'selected' : ''}>Arizona</option>
@@ -568,10 +564,10 @@ function renderCheckoutForm() {
                 </select>
                 <input type="text" name="zip" placeholder="ZIP Code" required value="${info.zip || ''}">
                 <input type="tel" name="phone" placeholder="Phone Number" required value="${info.phone || ''}">
-                <button type="submit">Continue to Payment</button>
+                <button type="submit" style="background:#b89b5e;">Save Info & Show Payment</button>
             </form>
 
-            <div id="paypal-button-container" style="margin-top:20px;"></div>
+            <div id="paypal-button-container" style="max-width:400px; margin: 0 auto; display:none;"></div>
         </div>
     `;
 
@@ -586,41 +582,34 @@ function renderCheckoutForm() {
             zip: this.zip.value,
             phone: this.phone.value
         };
+        // Show the PayPal button and hide the submit button after form is saved
+        document.getElementById("paypal-button-container").style.display = "block";
+        this.querySelector('button[type="submit"]').style.display = "none";
         renderPayPal(subtotal, shipping, tax, total);
     };
 }
 
-// ==============================
-// REMOVE ITEM FUNCTION (preserve shipping info)
-// ==============================
 function removeFromCart(index) {
-    // Save current form info before removing
     const form = document.getElementById("checkoutForm");
     if (form) {
         window.checkoutInfo = {
-            name: form.name.value,
-            email: form.email.value,
-            address: form.address.value,
-            city: form.city.value,
-            state: form.state.value,
-            zip: form.zip.value,
-            phone: form.phone.value
+            name: form.name.value, email: form.email.value, address: form.address.value,
+            city: form.city.value, state: form.state.value, zip: form.zip.value, phone: form.phone.value
         };
     }
-
-    // Remove item from cart
     cart.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
-
-    // Re-render checkout form with preserved info
     renderCheckoutForm();
 }
 
 // ==============================
-// PAYPAL CHECKOUT (after form submit)
+// PAYPAL + HIDDEN GOOGLE/FORM-SUBMIT
 // ==============================
 function renderPayPal(subtotal, shipping, tax, total) {
+    // 1. PLACE YOUR GOOGLE SCRIPT URL HERE
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4dGpuvsijb6KLnTGSEDJZkYy7MgR4WMXXY2ZUPlNEqRyiO25umYLed3gGwxULrknI/exec"; 
+
     paypal.Buttons({
         createOrder: function(data, actions) {
             return actions.order.create({
@@ -645,52 +634,65 @@ function renderPayPal(subtotal, shipping, tax, total) {
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
                 const purchasedProducts = cart.map(item => item.name).join(", ");
+                
+                const orderPayload = {
+                    name: window.checkoutInfo.name,
+                    email: window.checkoutInfo.email,
+                    address: window.checkoutInfo.address,
+                    city: window.checkoutInfo.city,
+                    state: window.checkoutInfo.state,
+                    zip: window.checkoutInfo.zip,
+                    phone: window.checkoutInfo.phone,
+                    products: purchasedProducts,
+                    orderID: data.orderID,
+                    total: total.toFixed(2),
+                    _subject: "ROZAN ORDER: " + data.orderID,
+                    _template: "table"
+                };
 
-                // auto-submit form to FormSubmit
-                const form = document.createElement("form");
-                form.action = "https://formsubmit.co/rozanshop8@gmail.com";
-                form.method = "POST";
-                form.innerHTML = `
-                    <input type="hidden" name="name" value="${window.checkoutInfo.name}">
-                    <input type="hidden" name="email" value="${window.checkoutInfo.email}">
-                    <input type="hidden" name="address" value="${window.checkoutInfo.address}">
-                    <input type="hidden" name="city" value="${window.checkoutInfo.city}">
-                    <input type="hidden" name="state" value="${window.checkoutInfo.state}">
-                    <input type="hidden" name="zip" value="${window.checkoutInfo.zip}">
-                    <input type="hidden" name="phone" value="${window.checkoutInfo.phone}">
-                    <input type="hidden" name="products" value="${purchasedProducts}">
-                    <input type="hidden" name="orderID" value="${data.orderID}">
-                    <input type="hidden" name="total" value="${total.toFixed(2)}">
-                `;
-                document.body.appendChild(form);
-                form.submit();
+                // Background send to Google
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderPayload)
+                });
 
-                // clear cart after successful capture + form submit
+                // Background send to FormSubmit (AJAX)
+                fetch("https://formsubmit.co/ajax/rozanshop8@gmail.com", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(orderPayload)
+                });
+
+                // UI Success
                 cart = [];
                 localStorage.setItem("cart", JSON.stringify(cart));
                 updateCartCount();
 
                 document.getElementById("app").innerHTML = `
-                    <div class="section">
-                        <h2>🎉 Thank You, ${window.checkoutInfo.name}!</h2>
-                        <p>Your order has been placed successfully.</p>
-                        <p><strong>Order ID:</strong> ${data.orderID}</p>
-                        <p><strong>Total Paid:</strong> $${total.toFixed(2)}</p>
+                    <div class="section" style="padding: 100px 20px;">
+                        <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;">
+                            <h2 style="color: #b89b5e; font-size: 32px; margin-bottom: 20px;">🎉 Thank You, ${window.checkoutInfo.name}!</h2>
+                            <p>Your order <strong>${data.orderID}</strong> has been placed successfully.</p>
+                            <p style="color: #666; margin-top:10px;">A confirmation was sent to ${window.checkoutInfo.email}.</p>
+                            <button onclick="goHome()" style="margin-top: 30px; background: #b89b5e;">Continue Shopping</button>
+                        </div>
                     </div>
                 `;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         },
-      onCancel: function() {
-    alert("Payment cancelled. Your cart is intact.");
-    
-    // Re-render the checkout page with the current cart and pre-filled shipping info
-    renderCheckoutForm(); 
-},
-onError: function(err) {
-    console.error(err);
-    alert("Checkout error.");
-}
-}).render('#paypal-button-container');
+        onCancel: function() {
+            alert("Payment cancelled.");
+            renderCheckoutForm(); 
+        },
+        onError: function(err) {
+            console.error(err);
+            alert("Checkout error.");
+        }
+    }).render('#paypal-button-container');
 }
 // ==============================
 // SHOP & CATEGORIES
@@ -857,4 +859,6 @@ goHome();
 
 </body>
 </html>
+</html>
+
 </html>
