@@ -287,7 +287,7 @@ price: 250,
 images: [
 "images/china.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique China Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -297,7 +297,7 @@ price: 250,
 images: [
 "images/haiti.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Haiti Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -307,7 +307,7 @@ price: 250,
 images: [
 "images/usa.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique USA Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -317,7 +317,7 @@ price: 250,
 images: [
 "images/swisterland.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Swisterland Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -327,7 +327,7 @@ price: 250,
 images: [
 "images/england.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique England Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -337,7 +337,7 @@ price: 250,
 images: [
 "images/panama.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Panama Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -347,7 +347,7 @@ price: 250,
 images: [
 "images/brazil.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Brazil Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -358,7 +358,7 @@ images: [
 "images/argentina.jpg",
 
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Argentina Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -368,7 +368,7 @@ price: 250,
 images: [
 "images/korea.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Korea Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -379,7 +379,7 @@ price: 250,
 images: [
 "images/belgium.jpg",
 ],
-desc: "Unique Lionhead-Themed Statement Bracelet.",
+desc: "Unique Belgium Worldcup Necklace.",
 category: "World Cup Soccer Necklace"
 },
 
@@ -698,7 +698,7 @@ function renderPayPal(subtotal, shipping, tax, total) {
 // SHOP & CATEGORIES
 // ==============================
 function renderCategories() {
-    const categories = ["Basketball", "Necklace", "Bracelet", 'World Cup Soccor Necklace'];
+    const categories = ["Basketball", "Necklace", "Bracelet", 'World Cup Soccer Necklace'];
     let html = `<div class="section"><h2>Shop</h2><div class="products">`;
 
     categories.forEach(cat => {
@@ -706,7 +706,7 @@ function renderCategories() {
         if (cat === "Basketball") catImage = "images/basketball-main.jpg";
         if (cat === "Necklace") catImage = "images/Photoroom_20260116_184522.jpg";
         if (cat === "Bracelet") catImage = "images/bracelet-main.jpg";
-        if (cat === "World Cup Soccor Necklace") catImage = "images/soccerball-main.jpg";
+        if (cat === "World Cup Soccer Necklace") catImage = "images/soccerball-main.jpg";
         
 
         html += `<div class="product-card" onclick="renderCategory('${cat}')">
@@ -861,4 +861,3 @@ goHome();
 </html>
 </html>
 
-</html>
